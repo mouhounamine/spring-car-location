@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - 8081:8081
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/mydb
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    networks:
+      - clocation
+
+  mysqldb:
+    image: mysql:8.0.34
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_DATABASE=mydb
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./db_utils/script.sql:/docker-entrypoint-initdb.d/script.sql
+    networks:
+      - clocation
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      retries: 10
+      interval: 3s
+      timeout: 30s
+
+volumes:
+  mysql-data:
+
+networks:
+  clocation:
+    name: clocation
