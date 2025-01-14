@@ -29,97 +29,44 @@
 
 # 2) Analyse de votre schéma
 
-## a) Respect de la 1NF
-
-Dans votre schéma, chaque **colonne** représente un attribut **unique** (par exemple, `owner_name`, `listing_price`, `transaction_date`, etc.), et il n’y a pas de colonne où vous inséreriez un tableau ou une liste non atomique.
-
-- **OWNER(owner_id, owner_name, contact_info)** : valeurs atomiques (texte, nombre…).  
-- **PROPERTY(property_id, owner_id, address, …)** : idem, chaque champ est indivisible.  
-- **ANCILLARY_FACILITY(facility_id, property_id, facility_type, description)** : idem, champs atomiques.  
-- **CLIENT, TOUR, LUX_TRANSACTION** : même constat.  
-
-Vous ne stockez pas, par exemple, plusieurs e-mails dans un seul champ ou un tableau d’images dans un seul champ (vous pourriez, mais ce serait hors 1NF).  
-**Conclusion** : Votre schéma est en **1NF**.
-
----
-
-## b) Respect de la 2NF
-
-La 2NF ne concerne que les tables dont la **clé primaire est composite**. Dans votre modèle :
-
-- **OWNER** : `owner_id` (PK) — clé **non composite**.  
-- **PROPERTY** : `property_id` (PK) — clé **non composite**.  
-- **ANCILLARY_FACILITY** : `facility_id` (PK) — clé **non composite**.  
-- **CLIENT** : `client_id` (PK) — clé **non composite**.  
-- **TOUR** : `tour_id` (PK) — clé **non composite**.  
-- **LUX_TRANSACTION** : `transaction_id` (PK) — clé **non composite**.  
-
-Puisque **aucune** table n’a de **clé primaire composite**, il n’existe pas de « dépendance partielle » (un attribut qui dépendrait uniquement d’une partie de la clé).  
-**Conclusion** : Le modèle est automatiquement en **2NF** puisque toutes les clés primaires sont à un seul attribut.
-
----
-
-## c) Respect de la 3NF
-
-Pour la 3NF, on vérifie qu’aucun attribut non-clé ne dépend d’un autre attribut non-clé (dépendance transitive). Typiquement, on demande si, par exemple, dans la table PROPERTY, un attribut dépend d’un autre attribut non primaire.
-
-- Dans **PROPERTY** (colonne `owner_id` est une FK, mais dépend fonctionnellement de la PK `property_id` — pas de transitive via d’autres attributs).  
-- Dans **OWNER** (seuls `owner_name` et `contact_info` dépendent de `owner_id`).  
-- Dans **LUX_TRANSACTION**, tous les attributs (`property_id`, `transaction_date`, `transaction_amount`, `commission_amount`, `fiscal_period`) dépendent directement de la PK `transaction_id`. Il n’y a pas de dépendance transitive — par exemple, `commission_amount` n’est pas calculé **à partir d’un autre attribut non clé** de la table.  
-
-On ne repère pas de colonne calculée directement depuis une autre colonne non PK (si vous aviez, par exemple, `price_per_room` dans `PROPERTY` alors que vous stockez déjà `number_of_rooms` et `listing_price`, il pourrait y avoir une dépendance transitive). 
-
-**Conclusion** : Il n’y a **pas de dépendance transitive** détectée, donc le schéma est en **3NF**.
-
----
-
-## d) Respect de la BCNF
-
-La BCNF exige que **toute dépendance fonctionnelle** X → Y se fasse avec X qui est une **clé candidate**. Dans la plupart des cas, votre conception respecte cela :
-
-- **OWNER(owner_id → owner_name, contact_info)** : `owner_id` est la PK, donc c’est bien une clé candidate.  
-- **PROPERTY(property_id → …)** : idem.  
-- **ANCILLARY_FACILITY(facility_id → …)** : idem.  
-
-Les dépendances en FK (ex. `property_id` → `owner_id` via la table `PROPERTY`) ne violent pas la BCNF car c’est une dépendance de type « la PK d’une autre table » ; la contrainte d’intégrité référentielle ne remet pas en cause la BCNF.  
-
-**Conclusion** : Il n’y a pas de violation évidente, donc on peut considérer que votre base est en **BCNF**.
-
----
-
-## e) Respect de la 4NF
-
-On regarde maintenant les **dépendances multivaluées** :  
-- Avez-vous une table où vous stockez des **ensembles indépendants** d’attributs multivalués ?  
-- Par exemple, si dans PROPERTY, vous stockiez plusieurs `facilities` sous forme de colonne multiple, ce serait un problème.  
-
-Mais vous avez fait le choix de mettre les installations annexes (facilities) dans une table **séparée** `ANCILLARY_FACILITY`. Du coup, vous n’avez pas de dépendance multivaluée dans la même table.  
-
-**Conclusion** : Les **dépendances multivaluées** ont été éclatées (OWNER vs PROPERTY vs ANCILLARY_FACILITY, etc.), donc votre schéma respecte la **4NF**.
-
----
-
-## f) Respect de la 5NF et 6NF
-
-Pour la **5NF** (Fifth Normal Form) et la **6NF**, il faut vérifier qu’il n’existe pas de **join dependency** non triviale (pour la 5NF) ou que la table n’a pas besoin d’être encore davantage éclatée (pour la 6NF). Ces niveaux sont rarement exigés dans des projets classiques :
-
-1. **5NF** : chaque table est déjà “décomposée” de sorte qu’aucune relation n’ait besoin d’être recomposée (join) à partir d’attributs multiples. Vos entités ont été clairement séparées (OWNER, PROPERTY, ANCILLARY_FACILITY…) en respectant les dépendances.  
-2. **6NF** : implique une décomposition encore plus atomique (parfois, on arrive à des “tables” à deux colonnes, etc.). On l’utilise dans des bases temporelles, par exemple, ou des contextes très spécifiques.  
-
-À **première vue**, votre schéma **n’a pas** de besoin de plus haute décomposition (il n’y a pas de table pivot contenant 3+ clés qui nécessiterait un “further join decomposition”). Tant que vous n’avez pas de dépendances plus complexes, on peut considérer que vous respectez **5NF** et **6NF** dans la mesure où **il n’y a pas de join dependency** non triviale identifiée.  
-
-Cependant, **c’est très rare** (et parfois inutile en pratique) de prétendre respecter la 6NF à 100% si vous n’avez pas fait d’analyse exhaustive des dépendances. Généralement, on dit plutôt que l’on respecte la 3NF ou la BCNF et qu’on n’a pas détecté de cas qui nécessiteraient 4NF+.
-
+Analyse des Formes Normales
+1NF (Première forme normale) : Respectée
+    Les données sont atomiques : pas de groupes répétés ni de colonnes multi-valeurs.
+    Chaque table a une clé primaire définie.
+    Les valeurs dans chaque colonne sont scalaires (pas de listes ou d'objets imbriqués).
+2NF (Deuxième forme normale) : Respectée
+    Toutes les colonnes non-clés dépendent entièrement de la clé primaire.
+    Il n'y a pas de clés primaires composites dans votre base actuelle, donc pas de dépendances partielles.
+3NF (Troisième forme normale) : Respectée
+    Aucune dépendance transitive :
+    Les colonnes non-clés ne dépendent pas d'autres colonnes non-clés.
+    Exemple : Dans PROPERTY, toutes les colonnes dépendent directement de property_id.
+BCNF (Forme normale de Boyce-Codd) : Respectée
+    Toutes les dépendances fonctionnelles ont un antécédent qui est une clé candidate.
+    Exemple : Dans NEIGHBORHOOD, city_id est une clé étrangère, mais neighborhood_name est également unique dans le contexte de la ville (UQ_NEIGHBORHOOD).
+4NF (Quatrième forme normale) : Respectée
+    Les dépendances multivaluées (relations 1-n ou n-m) sont correctement gérées par des tables séparées :
+    Exemple : Les relations PROPERTY → ANCILLARY_FACILITY (1-n) et PROPERTY → TOUR (1-n) sont normalisées.
+    Il n'existe pas de dépendances multivaluées non triviales dans une seule table.
+5NF (Cinquième forme normale) : Partiellement respectée
+    En théorie, la 5NF exige qu'aucune information ne puisse être reconstruite via plusieurs relations sans perte.
+    La base est proche de respecter cette norme car elle ne contient pas de dépendances de jointure complexes. Toutefois :
+    Les relations comme CITY → NEIGHBORHOOD → PROPERTY pourraient introduire des anomalies si les contraintes ne sont pas strictement maintenues.
+6NF (Sixième forme normale) : Non respectée
+    La 6NF implique une décomposition extrême où chaque table ne contient qu'une seule dépendance relationnelle.
+    Ce niveau est rarement utilisé en dehors de bases dimensionnelles ou de time-series très spécifiques.
+    Dans votre base, des tables comme PROPERTY regroupent plusieurs colonnes dépendantes de la clé primaire, ce qui est normal dans les bases relationnelles transactionnelles.
 ---
 
 # 3) Conclusion sur la normalisation
-
-- **1NF** : Respectée car données atomiques, aucune “multi-colonne” dans un même attribut.  
-- **2NF** : Respectée (pas de clé primaire composite).  
-- **3NF** : Respectée (pas de dépendances transitives apparentes).  
-- **BCNF** : Respectée (pas de dépendance fonctionnelle où l’antécédent n’est pas clé).  
-- **4NF** : Respectée (pas de dépendances multivaluées non triviales, tables séparées pour les relations 1-n).  
-- **5NF / 6NF** : Pas de joint dependency non triviale détectée, donc a priori respectées. Dans un projet académique standard, on considère généralement qu’on ne viole pas ces formes normales plus avancées.  
+Forme Normale	Respectée ?	Remarques
+1NF	            Oui	Données atomiques, pas de groupes répétés.
+2NF	            Oui	Pas de dépendances partielles.
+3NF	            Oui	Pas de dépendances transitives.
+BCNF	        Oui	Pas de dépendances fonctionnelles non-clés.
+4NF	            Oui	Dépendances multivaluées correctement gérées avec des tables séparées.
+5NF	            Partiellement	Proche, mais pourrait être renforcée par des contraintes supplémentaires.
+6NF	            Non	Non nécessaire dans notre cas pratique (transactionnel).
 
 En résumé, vous pouvez **affirmer** que votre schéma est **au moins en 3NF / BCNF**, et même a priori **jusqu’en 6NF** car aucune dépendance ou jointure complexe ne justifie d’autres décompositions.  
 
