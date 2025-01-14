@@ -1,0 +1,31 @@
+{
+    "property_id": 1001,
+    "address": {
+      "street": "1 Rue Royale",
+      "city": "Paris",
+      "zip": "75008",
+      "country": "France"
+    },
+    "property_type": "mansion",
+    "listing_price": 3000000,
+    "owner": {
+      "owner_id": 101,
+      "owner_name": "John Doe"
+    },
+    "facilities": [
+      { "type": "garage", "description": "2 cars - underground" },
+      { "type": "pool",   "description": "Indoor heated pool" }
+    ],
+    "feedbacks": [
+      {
+        "client_id": 201,
+        "comments": "Loved the location!",
+        "rating": 5
+      }
+    ],
+    "photos": [
+      "/images/property1001/photo1.jpg",
+      "/images/property1001/photo2.jpg"
+    ]
+  }
+  

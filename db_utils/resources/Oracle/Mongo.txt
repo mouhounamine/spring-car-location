@@ -1,0 +1,93 @@
+db.properties.insertOne({
+  "property_id": 1001,
+  "address": {
+    "street": "1 Rue Royale",
+    "city": "Paris",
+    "zip": "75008",
+    "country": "France"
+  },
+  "property_type": "mansion",
+  "listing_price": 3000000,
+  "owner": {
+    "owner_id": 101,
+    "owner_name": "John Doe"
+  },
+  "facilities": [
+    { "type": "garage", "description": "2 cars - underground" },
+    { "type": "pool",   "description": "Indoor heated pool" }
+  ],
+  "feedbacks": [
+    {
+      "client_id": 201,
+      "comments": "Loved the location!",
+      "rating": 5
+    }
+  ],
+  "photos": [
+    "/images/property1001/photo1.jpg"
+  ]
+});
+
+
+---
+
+db.properties.insertMany([
+  {
+    "property_id": 1002,
+    "address": {
+      "street": "22 Avenue Montaigne",
+      "city": "Paris",
+      "zip": "75008",
+      "country": "France"
+    },
+    "property_type": "apartment",
+    "listing_price": 1200000,
+    "owner": { "owner_id": 102, "owner_name": "Jane Smith" },
+    "feedbacks": [],
+    "photos": []
+  },
+  {
+    "property_id": 1003,
+    "address": {
+      "street": "3 Avenue du Casino",
+      "city": "Monte Carlo",
+      "zip": "98000",
+      "country": "Monaco"
+    },
+    "property_type": "villa",
+    "listing_price": 8200000,
+    "owner": { "owner_id": 101, "owner_name": "John Doe" },
+    "facilities": [
+      { "type": "guest_house", "description": "2 bedrooms guest cottage" }
+    ]
+  }
+]);
+--
+
+// Afficher tous les documents de la collection 'properties'
+db.properties.find().pretty();
+
+// Rechercher une propriété avec property_id = 1002
+db.properties.find({ "property_id": 1002 }).pretty();
+
+
+--
+
+// Ajouter un nouveau feedback pour la propriété 1001
+db.properties.updateOne(
+  { "property_id": 1001 },
+  {
+    $push: {
+      "feedbacks": {
+        "client_id": 202,
+        "comments": "Could use some renovations in the backyard",
+        "rating": 4
+      }
+    }
+  }
+);
+
+
+--
+
+db.properties.deleteOne({ "property_id": 1002 });

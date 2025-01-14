@@ -1,0 +1,35 @@
+// Créer un nœud Propriété
+CREATE (p1:Property {
+    property_id: 1001,
+    property_type: "mansion",
+    listing_price: 3000000
+});
+
+// Créer un nœud Owner
+CREATE (o1:Owner {
+    owner_id: 101,
+    owner_name: "John Doe"
+});
+
+// Créer un nœud Client
+CREATE (c1:Client {
+    client_id: 201,
+    client_name: "Robert Wagner"
+});
+
+
+// Relation : un propriétaire possède une propriété
+MATCH (p:Property {property_id: 1001}), (o:Owner {owner_id: 101})
+CREATE (o)-[:OWNS]->(p);
+
+// Relation : un client visite une propriété
+MATCH (c:Client {client_id: 201}), (p:Property {property_id: 1001})
+CREATE (c)-[:VISITED {date: "2025-04-14"}]->(p);
+
+// Trouver les propriétés visitées par un client particulier
+MATCH (c:Client {client_id: 201})-[v:VISITED]->(p:Property)
+RETURN c, v, p;
+
+// Lister toutes les propriétés et leurs propriétaires
+MATCH (o:Owner)-[:OWNS]->(p:Property)
+RETURN o.owner_name, p.property_id, p.property_type;

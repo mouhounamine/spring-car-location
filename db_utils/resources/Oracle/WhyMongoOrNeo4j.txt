@@ -1,0 +1,36 @@
+3) Comparaison : Relationnel vs NoSQL
+3.1. Avantages d’une base relationnelle (Oracle)
+Schéma strict : idéal pour les données structurées (transactions, comptabilité, etc.).
+SQL : langage standardisé (jointures complexes, sous-requêtes, etc.).
+ACID : transactions fiables (Atomicité, Cohérence, Isolation, Durabilité).
+Contraintes d’intégrité (FK, CHECK, etc.) : protège fortement la cohérence des données.
+3.2. Avantages de MongoDB (Document-based)
+Flexibilité de schéma : idéal pour des données semi-structurées, des attributs facultatifs, des documents variés (médias, feedback).
+Évolution rapide : ajouter/supprimer des champs sans migrer toute la base.
+Performances en lecture/écriture massives (scalabilité horizontale).
+Intégration naturelle avec un format JSON.
+3.3. Avantages de Neo4J (Graph-oriented)
+Requêtes relationnelles complexes (recherche de chemins, analyse de réseaux) facilitées.
+Performance pour les traversées multiples (ex. “tous les amis des amis”, “toutes les propriétés connectées à un client via X chemin”).
+Visualisation naturelle d’un graphe.
+3.4. Différences globales
+Structure :
+
+Relationnel : tables, lignes, colonnes, schéma fixe.
+MongoDB : documents JSON, sans schéma strict.
+Neo4J : nœuds et relations, le schéma est implicite dans la structure de graphe.
+Langage de requête :
+
+Relationnel : SQL
+MongoDB : API JavaScript/JSON, opérateurs Mongo (aggregate pipeline, etc.)
+Neo4J : Cypher
+Cas d’usage :
+
+Relationnel : Données structurées, transactions complexes, besoin d’intégrité forte.
+MongoDB : Données évolutives, documents riches (médias, logs, user profiles), scalabilité horizontale.
+Neo4J : Analyse de graphes, réseaux sociaux, recommandations, chemins.
+
+Conclusion
+Votre base relationnelle (Oracle) reste essentielle pour la partie transactionnelle (intégrité, calcul de commissions, etc.).
+MongoDB vous permet de stocker des contenus non structurés ou semi-structurés (photos, retours clients, documents multimedia).
+Neo4J met en valeur les relations (visites, clients, propriétaires) et facilite l’analyse de patterns de graphe (recommandations, cluster de clients, etc.).
