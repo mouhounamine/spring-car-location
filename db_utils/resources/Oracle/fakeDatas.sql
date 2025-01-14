@@ -1,3 +1,40 @@
+-- ===================================================================
+-- Insérer d'abord les villes
+-- ===================================================================
+INSERT INTO CITY (city_name, code_postal, region, country)
+VALUES ('Paris', '75008', 'Ile-de-France', 'France');
+
+INSERT INTO CITY (city_name, code_postal, region, country)
+VALUES ('Monaco', '98000', 'Monaco', 'Monaco');
+
+INSERT INTO CITY (city_name, code_postal, region, country)
+VALUES ('Nice', '06000', 'Provence-Alpes-Côte d''Azur', 'France');
+
+INSERT INTO CITY (city_name, code_postal, region, country)
+VALUES ('Miami', '33139', 'Florida', 'US');
+
+-- ===================================================================
+-- Insérer ensuite les quartiers
+-- ===================================================================
+INSERT INTO NEIGHBORHOOD (city_id, neighborhood_name)
+VALUES (1, 'Champs-Elysées');
+
+INSERT INTO NEIGHBORHOOD (city_id, neighborhood_name)
+VALUES (1, 'Quartier Montaigne');
+
+INSERT INTO NEIGHBORHOOD (city_id, neighborhood_name)
+VALUES (2, 'Monte-Carlo');
+
+INSERT INTO NEIGHBORHOOD (city_id, neighborhood_name)
+VALUES (3, 'Massena');
+
+INSERT INTO NEIGHBORHOOD (city_id, neighborhood_name)
+VALUES (4, 'OceanDrive');
+
+-- ===================================================================
+-- Insérer les propriétaires
+-- ===================================================================
+
 INSERT INTO OWNER (owner_id, owner_name, contact_info)
 VALUES (101, 'John Doe', 'john.doe@luxury.com');
 
@@ -13,11 +50,15 @@ VALUES (104, 'Mary Brown', 'mary.brown@luxury.com');
 INSERT INTO OWNER (owner_id, owner_name, contact_info)
 VALUES (105, 'David Johnson', 'david.johnson@luxury.com');
 
+-- ===================================================================
+-- Insérer les propriétés
+-- ===================================================================
+
 INSERT INTO PROPERTY (
     property_id, owner_id, address, property_type, number_of_rooms,
     total_living_area, lot_size, property_condition, listing_price,
     rental_or_sale, availability_date, exclusivity_tier,
-    city_category, neighborhood_category
+    city_id, neighborhood_id
 ) VALUES (
     1001, 101,
     '1 Rue Royale, 75008, Paris, France',
@@ -29,16 +70,16 @@ INSERT INTO PROPERTY (
     3000000,
     'sale',
     DATE '2025-06-01',
-    'premium',
-    'Paris',
-    'Champs-Elysées'
+    'Premium',
+    1,  -- Paris
+    1   -- Champs-Elysées
 );
 
 INSERT INTO PROPERTY (
     property_id, owner_id, address, property_type, number_of_rooms,
     total_living_area, lot_size, property_condition, listing_price,
     rental_or_sale, availability_date, exclusivity_tier,
-    city_category, neighborhood_category
+    city_id, neighborhood_id
 ) VALUES (
     1002, 102,
     '22 Avenue Montaigne, 75008, Paris, France',
@@ -50,16 +91,16 @@ INSERT INTO PROPERTY (
     1200000,
     'sale',
     DATE '2025-02-10',
-    'standard',
-    'Paris',
-    'Quartier Montaigne'
+    'Standard',
+    1,  -- Paris
+    2   -- Quartier Montaigne
 );
 
 INSERT INTO PROPERTY (
     property_id, owner_id, address, property_type, number_of_rooms,
     total_living_area, lot_size, property_condition, listing_price,
     rental_or_sale, availability_date, exclusivity_tier,
-    city_category, neighborhood_category
+    city_id, neighborhood_id
 ) VALUES (
     1003, 101,
     '3 Avenue du Casino, 98000, Monte Carlo, Monaco',
@@ -71,16 +112,16 @@ INSERT INTO PROPERTY (
     8200000,
     'sale',
     DATE '2025-05-15',
-    'premium',
-    'Monaco',
-    'Monte-Carlo'
+    'Premium',
+    2,  -- Monaco
+    3   -- Monte-Carlo
 );
 
 INSERT INTO PROPERTY (
     property_id, owner_id, address, property_type, number_of_rooms,
     total_living_area, lot_size, property_condition, listing_price,
     rental_or_sale, availability_date, exclusivity_tier,
-    city_category, neighborhood_category
+    city_id, neighborhood_id
 ) VALUES (
     1004, 103,
     '15 Place Massena, 06000, Nice, France',
@@ -92,16 +133,16 @@ INSERT INTO PROPERTY (
     450000,
     'sale',
     DATE '2025-03-01',
-    'limited_access',
-    'Nice',
-    'Massena'
+    'Limited Access',
+    3,  -- Nice
+    4   -- Massena
 );
 
 INSERT INTO PROPERTY (
     property_id, owner_id, address, property_type, number_of_rooms,
     total_living_area, lot_size, property_condition, listing_price,
     rental_or_sale, availability_date, exclusivity_tier,
-    city_category, neighborhood_category
+    city_id, neighborhood_id
 ) VALUES (
     1005, 104,
     '100 Ocean Drive, 33139, Miami, US',
@@ -113,11 +154,15 @@ INSERT INTO PROPERTY (
     2200000,
     'rental',
     DATE '2026-01-01',
-    'premium',
-    'Miami',
-    'OceanDrive'
+    'Premium',
+    4,  -- Miami
+    5   -- OceanDrive
 );
 
+
+-- ===================================================================
+-- Insérer les équipements
+-- ===================================================================
 
 INSERT INTO ANCILLARY_FACILITY (
     facility_id, property_id, facility_type, description
@@ -149,7 +194,9 @@ INSERT INTO ANCILLARY_FACILITY (
     505, 1005, 'gym', 'Private gym room'
 );
 
-
+-- ===================================================================
+-- Insérer les clients
+-- ===================================================================
 INSERT INTO CLIENT (client_id, client_name, contact_info)
 VALUES (201, 'Robert Wagner', 'robert.wagner@vip.com');
 
@@ -166,6 +213,9 @@ INSERT INTO CLIENT (client_id, client_name, contact_info)
 VALUES (205, 'James Brown', 'james.brown@vip.com');
 
 
+-- ===================================================================
+-- Insérer les visites
+-- ===================================================================
 INSERT INTO TOUR (tour_id, property_id, client_id, tour_date, comments)
 VALUES (3001, 1001, 201, DATE '2025-04-14', 'VIP request, very interested');
 
@@ -181,7 +231,9 @@ VALUES (3004, 1004, 204, DATE '2025-03-12', 'Request for second visit');
 INSERT INTO TOUR (tour_id, property_id, client_id, tour_date, comments)
 VALUES (3005, 1005, 205, DATE '2026-01-22', 'Will come with family');
 
-
+-- ===================================================================
+-- Insérer les transactions
+-- ===================================================================
 INSERT INTO LUX_TRANSACTION (
   transaction_id, property_id, transaction_date,
   transaction_amount, commission_amount, fiscal_period
@@ -248,9 +300,17 @@ VALUES (
 );
 
 
+-- ===================================================================
+-- Afficher les tables
+-- ===================================================================
+
 SELECT * FROM OWNER;
+SELECT * FROM CITY;
+SELECT * FROM NEIGHBORHOOD;
 SELECT * FROM PROPERTY;
 SELECT * FROM ANCILLARY_FACILITY;
 SELECT * FROM CLIENT;
 SELECT * FROM TOUR;
+SELECT * FROM TOUR_LOG;
 SELECT * FROM LUX_TRANSACTION;
+
