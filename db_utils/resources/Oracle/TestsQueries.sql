@@ -113,7 +113,7 @@ DECLARE
   v_fac_id NUMBER;
 BEGIN
   PKG_PROPERTY_MGT.add_ancillary_facility(
-    p_property_id   => 1001,     -- un property_id existant
+    p_property_id   => 1001,     
     p_facility_type => 'wine_cellar',
     p_description   => 'Underground wine cellar with 1000 bottles capacity',
     p_facility_id   => v_fac_id
@@ -160,8 +160,8 @@ INSERT INTO VILLA_OBJ_TAB VALUES(
     address_t('Route de la Plage', 'Cannes', '06400', 'France'),
     'villa',
     2800000,
-    2,   -- number_of_floors
-    'Y' -- has_garden
+    2, 
+    'Y' 
   )
 );
 

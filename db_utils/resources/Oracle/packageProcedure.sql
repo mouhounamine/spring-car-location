@@ -103,7 +103,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_PROPERTY_MGT AS
         p_property_id   OUT NUMBER
     ) IS
     BEGIN
-        -- Vérification (simplifiée) : l'owner doit exister
+        -- Vérification -> l'owner doit exister
         DECLARE
             v_count NUMBER;
         BEGIN

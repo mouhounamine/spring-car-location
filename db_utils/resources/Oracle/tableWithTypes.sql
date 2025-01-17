@@ -62,7 +62,7 @@ CREATE OR REPLACE TYPE transaction_t AS OBJECT (
 -------------------------------------------------------------------------------
 CREATE OR REPLACE TYPE villa_t UNDER property_t (
     number_of_floors  NUMBER,
-    has_garden        CHAR(1)     -- 'Y' or 'N'
+    has_garden        CHAR(1)  
 );
 /
 
@@ -71,7 +71,7 @@ CREATE OR REPLACE TYPE villa_t UNDER property_t (
 -------------------------------------------------------------------------------
 CREATE OR REPLACE TYPE apartment_t UNDER property_t (
     floor_level       NUMBER,
-    has_elevator      CHAR(1)     -- 'Y' or 'N'
+    has_elevator      CHAR(1)     
 );
 /
 
@@ -140,10 +140,10 @@ INSERT INTO VILLA_OBJ_TAB VALUES(
   villa_t(
     2001,
     address_t('Chemin du Paradis', 'Nice', '06000', 'France'),
-    'villa',             -- property_type (hérité)
-    2500000,            -- listing_price (hérité)
-    2,                  -- number_of_floors
-    'Y'                 -- has_garden
+    'villa',             
+    2500000,            
+    2,                  
+    'Y'                 
   )
 );
 
@@ -153,8 +153,8 @@ INSERT INTO APARTMENT_OBJ_TAB VALUES(
     address_t('5 Boulevard Haussmann', 'Paris', '75009', 'France'),
     'apartment',
     1200000,
-    5,   -- floor_level
-    'Y'  -- has_elevator
+    5,   
+    'Y'  
   )
 );
 
@@ -177,10 +177,10 @@ INSERT INTO FACILITY_OBJ_TAB VALUES(
 INSERT INTO TRANSACTION_OBJ_TAB VALUES(
   transaction_t(
     10001,
-    1001,           -- property_id = 1001 (celui de la PROPERTY_OBJ_TAB)
+    1001,             
     DATE '2025-01-05',
     1800000,
-    0               -- commission_amount (pour l'instant on le met à 0)
+    0               
   )
 );
 

@@ -17,9 +17,3 @@ UNIQUE (contact_info);
 ALTER TABLE PROPERTY
 ADD CONSTRAINT CHK_PROPERTY_CONDITION
 CHECK (property_condition IN ('new','excellent','good','needs_renovation'));
-
--- 5) (Optionnel) si vous avez un champ pourcent_commission, ex. dans LUX_TRANSACTION
---    alors vous faites :
--- ALTER TABLE LUX_TRANSACTION
--- ADD CONSTRAINT CHK_COMMISSION_RANGE
--- CHECK (pourcent_commission BETWEEN 3 AND 7);

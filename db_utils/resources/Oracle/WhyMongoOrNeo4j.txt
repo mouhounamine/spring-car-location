@@ -31,6 +31,6 @@ MongoDB : Données évolutives, documents riches (médias, logs, user profiles),
 Neo4J : Analyse de graphes, réseaux sociaux, recommandations, chemins.
 
 Conclusion
-Votre base relationnelle (Oracle) reste essentielle pour la partie transactionnelle (intégrité, calcul de commissions, etc.).
-MongoDB vous permet de stocker des contenus non structurés ou semi-structurés (photos, retours clients, documents multimedia).
+Notre base relationnelle (Oracle) reste essentielle pour la partie transactionnelle (intégrité, calcul de commissions, etc.).
+MongoDB nous permet de stocker des contenus non structurés ou semi-structurés (photos, retours clients, documents multimedia).
 Neo4J met en valeur les relations (visites, clients, propriétaires) et facilite l’analyse de patterns de graphe (recommandations, cluster de clients, etc.).
